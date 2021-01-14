@@ -1,3 +1,4 @@
+let mode: "stopwatch"|"clock" = "stopwatch"
 // 10^-2 seconds
 let centisecondsSum: number = 0;
 // returned by setInterval
@@ -6,9 +7,9 @@ let counter: number|null = null
 function startStopwatch(): void {
 	if (!counter) {
 		counter = setInterval(() => {
-			centisecondsSum += 10;
+			centisecondsSum += 1;
 			displayStopwatchTime(centisecondsSum)
-		}, 100);
+		}, 10);
 	}
 }
 
@@ -50,6 +51,11 @@ function addZeroPadding(numAsStr: string) {
 }
 
 
+function changeMode(): void {
+	clearStopwatch()
+}
+
+
 let startButton = document.querySelector("#start") as HTMLButtonElement;
 let stopButton = document.querySelector("#stop") as HTMLButtonElement;
 let clearButton = document.querySelector("#restart") as HTMLButtonElement;
@@ -57,3 +63,6 @@ startButton.onclick = startStopwatch;
 stopButton.onclick = stopStopwatch;
 clearButton.onclick = clearStopwatch;
 
+
+let changeModeBanner = document.querySelector("#change-mode-banner") as HTMLDivElement;
+changeModeBanner.onmousedown = changeMode

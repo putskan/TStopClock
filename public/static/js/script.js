@@ -1,4 +1,5 @@
 "use strict";
+var mode = "stopwatch";
 // 10^-2 seconds
 var centisecondsSum = 0;
 // returned by setInterval
@@ -6,9 +7,9 @@ var counter = null;
 function startStopwatch() {
     if (!counter) {
         counter = setInterval(function () {
-            centisecondsSum += 10;
+            centisecondsSum += 1;
             displayStopwatchTime(centisecondsSum);
-        }, 100);
+        }, 10);
     }
 }
 function stopStopwatch() {
@@ -40,9 +41,14 @@ function addZeroPadding(numAsStr) {
     }
     return numAsStr;
 }
+function changeMode() {
+    clearStopwatch();
+}
 var startButton = document.querySelector("#start");
 var stopButton = document.querySelector("#stop");
 var clearButton = document.querySelector("#restart");
 startButton.onclick = startStopwatch;
 stopButton.onclick = stopStopwatch;
 clearButton.onclick = clearStopwatch;
+var changeModeBanner = document.querySelector("#change-mode-banner");
+changeModeBanner.onmousedown = changeMode;

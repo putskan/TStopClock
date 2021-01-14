@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Lobster', cursive;
+	letter-spacing: 1px;
+}
+
+html, body {
+	width: 100%;
+	min-height: 100%;
+}
+
+body {
+	background-color: #0984e3;
+}
+
+#stopwatch-wrapper, #buttons-wrapper, footer {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#stopwatch-wrapper {
+	list-style-type: none;
+	margin: 200px 0 70px 0;
+}
+
+#stopwatch-wrapper * {
+	font-size: 70px;
+	padding: 0 5px;
+}
+
+#buttons-wrapper button {
+	font-size: 20px;
+	margin: 30px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	width: 125px;
+	background-color: inherit;
+	color: #ecf0f1;
+	border: 1px solid #ecf0f1;
+	cursor: pointer;
+	transition: background-color 0.8s, color 0.8s;
+}
+
+#buttons-wrapper button:hover {
+	background-color: #ecf0f1;
+	color: #0984e3;
+}
+
+#buttons-wrapper button:active, #buttons-wrapper button:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+#buttons-wrapper button:active {
+  opacity: 0.6;
+}
+
+
+
+footer {
+	margin-top: 75px;
+	font-size: 22px;
+}
+
+.white {
+	color: #ecf0f1;
+}

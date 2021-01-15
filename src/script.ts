@@ -1,44 +1,58 @@
-let mode: "stopwatch"|"clock" = "stopwatch"
+let mode: "Stopwatch"|"Clock" = "Stopwatch";
 // 10^-2 seconds
-let centisecondsSum: number = 0;
+let swCentisecondsSum: number = 0;
 // returned by setInterval
-let counter: number|null = null
+let stopwatchInterval: number|null = null
+let clockInterval: number|null = null
 
 function startStopwatch(): void {
-	if (!counter) {
-		counter = setInterval(() => {
-			centisecondsSum += 1;
-			displayStopwatchTime(centisecondsSum)
-		}, 10);
+	if (!stopwatchInterval) {
+		stopwatchInterval = setInterval(function swInter() {
+			swCentisecondsSum += 1;
+			displayStopwatchTime(swCentisecondsSum);
+			return swInter;
+		}(), 10);
 	}
 }
 
 
 function stopStopwatch(): void {
-	if (counter) {
-		clearInterval(counter);
-		counter = null;
+	if (stopwatchInterval) {
+		clearInterval(stopwatchInterval);
+		stopwatchInterval = null;
 	}
 }
 
 
 function clearStopwatch(): void {
 	stopStopwatch();
-	centisecondsSum = 0;
+	swCentisecondsSum = 0;
 	displayStopwatchTime(0);
 }
 
 
 function displayStopwatchTime(totalCentiseconds: number) {
 	/* Add visualization */
-	let centis = addZeroPadding((totalCentiseconds % 100).toString());
-	let seconds = addZeroPadding((Math.floor(totalCentiseconds / 100) % 60).toString());
-	let minutes = addZeroPadding((Math.floor(totalCentiseconds / 100 / 60) % 60).toString());
-	let hours = addZeroPadding((Math.floor(totalCentiseconds / 100 / 3600) % 24).toString());
-	document.getElementById("centiseconds")!.innerHTML = centis;
-	document.getElementById("seconds")!.innerHTML = seconds;
-	document.getElementById("minutes")!.innerHTML = minutes;
-	document.getElementById("hours")!.innerHTML = hours;
+	let hours = Math.floor(totalCentiseconds / 100 / 3600) % 24;
+	let minutes = Math.floor(totalCentiseconds / 100 / 60) % 60;
+	let seconds = Math.floor(totalCentiseconds / 100) % 60;
+	let centis = totalCentiseconds % 100;
+	displayTime(hours, minutes, seconds, centis);
+}
+
+
+function displayTime(hours: number, minutes: number, seconds: number, centiseconds: number = -1): void {
+	let secondsAsStr = addZeroPadding((seconds).toString());
+	let minutesAsStr = addZeroPadding((minutes).toString());
+	let hoursAsStr = addZeroPadding((hours).toString());
+	document.getElementById("seconds")!.innerHTML = secondsAsStr;
+	document.getElementById("minutes")!.innerHTML = minutesAsStr;
+	document.getElementById("hours")!.innerHTML = hoursAsStr;
+
+	if (centiseconds !== -1) {
+		let centisAsStr = addZeroPadding((centiseconds).toString());
+		document.getElementById("centiseconds")!.innerHTML = centisAsStr;
+	}
 }
 
 
@@ -50,9 +64,44 @@ function addZeroPadding(numAsStr: string) {
 	return numAsStr
 }
 
+function startClock(): void {
+	clockInterval = setInterval(function clockInter() {	
+		let currentDate = new Date()
+		displayTime(currentDate.getHours(), currentDate.getMinutes(), currentDate.getSeconds());
+		return clockInter
+	}(), 1000)
+}
+
+
+function clearClock(): void {
+	clearInterval(clockInterval!);
+	clockInterval = null;
+	displayTime(0, 0, 0);
+}
+
 
 function changeMode(): void {
-	clearStopwatch()
+	if (mode === "Stopwatch") {
+		mode = "Clock";
+		startButton.disabled = true;
+		stopButton.disabled = true;
+		clearButton.disabled = true;
+		document.getElementById("centi-colon")!.classList.add("hide");
+		document.getElementById("centiseconds")!.classList.add("hide");
+		clearStopwatch();
+		startClock();
+	}
+	else {
+		mode = "Stopwatch";
+		startButton.disabled = false;
+		stopButton.disabled = false;
+		clearButton.disabled = false;
+		document.getElementById("centi-colon")!.classList.remove("hide");
+		document.getElementById("centiseconds")!.classList.remove("hide");
+		clearClock();
+	}
+
+	document.getElementById("title")!.innerHTML = mode;
 }
 
 
@@ -66,3 +115,7 @@ clearButton.onclick = clearStopwatch;
 
 let changeModeBanner = document.querySelector("#change-mode-banner") as HTMLDivElement;
 changeModeBanner.onmousedown = changeMode
+
+/* REMOVE THE TEXT SELECTION */
+/* combine get elelment by id in changeMode */
+/* Add fonts locally */

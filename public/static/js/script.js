@@ -1,38 +1,50 @@
 "use strict";
-var mode = "stopwatch";
+var mode = "Stopwatch";
 // 10^-2 seconds
-var centisecondsSum = 0;
+var swCentisecondsSum = 0;
 // returned by setInterval
-var counter = null;
+var stopwatchInterval = null;
+var clockInterval = null;
 function startStopwatch() {
-    if (!counter) {
-        counter = setInterval(function () {
-            centisecondsSum += 1;
-            displayStopwatchTime(centisecondsSum);
-        }, 10);
+    if (!stopwatchInterval) {
+        stopwatchInterval = setInterval(function swInter() {
+            swCentisecondsSum += 1;
+            displayStopwatchTime(swCentisecondsSum);
+            return swInter;
+        }(), 10);
     }
 }
 function stopStopwatch() {
-    if (counter) {
-        clearInterval(counter);
-        counter = null;
+    if (stopwatchInterval) {
+        clearInterval(stopwatchInterval);
+        stopwatchInterval = null;
     }
 }
 function clearStopwatch() {
     stopStopwatch();
-    centisecondsSum = 0;
+    swCentisecondsSum = 0;
     displayStopwatchTime(0);
 }
 function displayStopwatchTime(totalCentiseconds) {
     /* Add visualization */
-    var centis = addZeroPadding((totalCentiseconds % 100).toString());
-    var seconds = addZeroPadding((Math.floor(totalCentiseconds / 100) % 60).toString());
-    var minutes = addZeroPadding((Math.floor(totalCentiseconds / 100 / 60) % 60).toString());
-    var hours = addZeroPadding((Math.floor(totalCentiseconds / 100 / 3600) % 24).toString());
-    document.getElementById("centiseconds").innerHTML = centis;
-    document.getElementById("seconds").innerHTML = seconds;
-    document.getElementById("minutes").innerHTML = minutes;
-    document.getElementById("hours").innerHTML = hours;
+    var hours = Math.floor(totalCentiseconds / 100 / 3600) % 24;
+    var minutes = Math.floor(totalCentiseconds / 100 / 60) % 60;
+    var seconds = Math.floor(totalCentiseconds / 100) % 60;
+    var centis = totalCentiseconds % 100;
+    displayTime(hours, minutes, seconds, centis);
+}
+function displayTime(hours, minutes, seconds, centiseconds) {
+    if (centiseconds === void 0) { centiseconds = -1; }
+    var secondsAsStr = addZeroPadding((seconds).toString());
+    var minutesAsStr = addZeroPadding((minutes).toString());
+    var hoursAsStr = addZeroPadding((hours).toString());
+    document.getElementById("seconds").innerHTML = secondsAsStr;
+    document.getElementById("minutes").innerHTML = minutesAsStr;
+    document.getElementById("hours").innerHTML = hoursAsStr;
+    if (centiseconds !== -1) {
+        var centisAsStr = addZeroPadding((centiseconds).toString());
+        document.getElementById("centiseconds").innerHTML = centisAsStr;
+    }
 }
 function addZeroPadding(numAsStr) {
     /* pad with a zero as the first number if needed */
@@ -41,8 +53,39 @@ function addZeroPadding(numAsStr) {
     }
     return numAsStr;
 }
+function startClock() {
+    clockInterval = setInterval(function clockInter() {
+        var currentDate = new Date();
+        displayTime(currentDate.getHours(), currentDate.getMinutes(), currentDate.getSeconds());
+        return clockInter;
+    }(), 1000);
+}
+function clearClock() {
+    clearInterval(clockInterval);
+    clockInterval = null;
+    displayTime(0, 0, 0);
+}
 function changeMode() {
-    clearStopwatch();
+    if (mode === "Stopwatch") {
+        mode = "Clock";
+        startButton.disabled = true;
+        stopButton.disabled = true;
+        clearButton.disabled = true;
+        document.getElementById("centi-colon").classList.add("hide");
+        document.getElementById("centiseconds").classList.add("hide");
+        clearStopwatch();
+        startClock();
+    }
+    else {
+        mode = "Stopwatch";
+        startButton.disabled = false;
+        stopButton.disabled = false;
+        clearButton.disabled = false;
+        document.getElementById("centi-colon").classList.remove("hide");
+        document.getElementById("centiseconds").classList.remove("hide");
+        clearClock();
+    }
+    document.getElementById("title").innerHTML = mode;
 }
 var startButton = document.querySelector("#start");
 var stopButton = document.querySelector("#stop");
@@ -52,3 +95,6 @@ stopButton.onclick = stopStopwatch;
 clearButton.onclick = clearStopwatch;
 var changeModeBanner = document.querySelector("#change-mode-banner");
 changeModeBanner.onmousedown = changeMode;
+/* REMOVE THE TEXT SELECTION */
+/* combine get elelment by id in changeMode */
+/* Add fonts locally */ 

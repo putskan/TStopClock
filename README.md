@@ -1,2 +1,2 @@
-# TStopwatch
-Stopwatch coded in TypeScript
+# TStopClock
+Stopwatch & Clock programmed using TypeScript

@@ -66,13 +66,15 @@ function clearClock() {
     displayTime(0, 0, 0);
 }
 function changeMode() {
+    var centiColonElem = document.getElementById("centi-colon");
+    var centisecondsElem = document.getElementById("centiseconds");
     if (mode === "Stopwatch") {
         mode = "Clock";
         startButton.disabled = true;
         stopButton.disabled = true;
         clearButton.disabled = true;
-        document.getElementById("centi-colon").classList.add("hide");
-        document.getElementById("centiseconds").classList.add("hide");
+        centiColonElem.classList.add("hide");
+        centisecondsElem.classList.add("hide");
         clearStopwatch();
         startClock();
     }
@@ -81,8 +83,8 @@ function changeMode() {
         startButton.disabled = false;
         stopButton.disabled = false;
         clearButton.disabled = false;
-        document.getElementById("centi-colon").classList.remove("hide");
-        document.getElementById("centiseconds").classList.remove("hide");
+        centiColonElem.classList.remove("hide");
+        centisecondsElem.classList.remove("hide");
         clearClock();
     }
     document.getElementById("title").innerHTML = mode;
@@ -95,6 +97,3 @@ stopButton.onclick = stopStopwatch;
 clearButton.onclick = clearStopwatch;
 var changeModeBanner = document.querySelector("#change-mode-banner");
 changeModeBanner.onmousedown = changeMode;
-/* REMOVE THE TEXT SELECTION */
-/* combine get elelment by id in changeMode */
-/* Add fonts locally */ 
